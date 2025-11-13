@@ -281,5 +281,5 @@ qualityBtns.forEach((qb) => {
 
 // Watch now button scrolls to steps
 watchNowBtn.addEventListener('click', () => {
-  stepsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('top').scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
