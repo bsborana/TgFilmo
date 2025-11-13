@@ -1,0 +1,22 @@
+[
+  {
+    "poster": "https://image.tmdb.org/t/p/w500/5jkE2lnvUqq6P7rUG7wengEzWJ.jpg",
+    "stream": "https://example.com/stream/movie1",
+    "download": "https://example.com/download/movie1"
+  },
+  {
+    "poster": "https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
+    "stream": "https://example.com/stream/movie2",
+    "download": "https://example.com/download/movie2"
+  },
+  {
+    "poster": "https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
+    "stream": "https://example.com/stream/movie3",
+    "download": "https://example.com/download/movie3"
+  },
+  {
+    "poster": "https://image.tmdb.org/t/p/w500/lyU8QIEeZQGv5nYeD1yfknhk6V.jpg",
+    "stream": "https://example.com/stream/movie4",
+    "download": "https://example.com/download/movie4"
+  }
+]
