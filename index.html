@@ -3,123 +3,154 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Premium OTT</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Cinematic Movies — Premium</title>
+  <link rel="preconnect" href="https://images.unsplash.com" />
+  <link rel="stylesheet" href="assets/styles.css" />
 </head>
 <body>
-  <!-- Global loading overlay -->
-  <div id="globalLoader">
-    <div class="loader-ring"></div>
-    <div class="loader-text">Loading experience…</div>
-  </div>
 
-  <!-- Header with live player -->
-  <header class="app-header">
+  <!-- Top counters: realistic & fluctuating -->
+  <header id="top" class="site-header">
     <div class="brand">
-      <div class="logo-dot"></div>
-      <span class="brand-text">Premium OTT</span>
+      <div class="logo-mark">🎬</div>
+      <div class="brand-text">
+        <h1>Cinematic Movies</h1>
+        <p class="tagline">Premium • Realistic • Smart</p>
+      </div>
     </div>
 
-    <div class="actions">
-      <button id="themeToggle" class="btn ghost">Theme: Red/Blue</button>
-      <button id="refreshBtn" class="btn ghost">Refresh</button>
+    <div class="hero-counters">
+      <div class="counter-card">
+        <span class="label">Last year downloads</span>
+        <div class="value" id="lastYearDownloads">100,000</div>
+      </div>
+      <div class="counter-card">
+        <span class="label">Live users</span>
+        <div class="value" id="liveUsers">312</div>
+      </div>
+      <div class="counter-card">
+        <span class="label">Today downloads</span>
+        <div class="value" id="todayDownloads">1,420</div>
+      </div>
+      <div class="counter-card">
+        <span class="label">Total downloads</span>
+        <div class="value" id="totalDownloads">2,514,320</div>
+      </div>
     </div>
   </header>
 
-  <!-- Live stream strip (appears after clicking a poster) -->
-  <section class="live-strip" id="liveStrip">
-    <div class="live-meta">
-      <div class="live-indicator">
-        <span class="dot"></span><span>Live Stream</span>
+  <!-- Fake player zone (filled when user clicks a movie) -->
+  <section id="player" class="player-section hidden">
+    <div class="player-bg" id="playerBg"></div>
+    <div class="player-content">
+      <h2 id="playerTitle">Selected Movie Title</h2>
+
+      <div class="video-fake">
+        <!-- Fake controls -->
+        <div class="controls-top">
+          <button class="ctrl-btn" aria-label="Play/Pause" id="btnPlay">
+            <!-- Play icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M8 5v14l11-7-11-7z" fill="currentColor"/>
+            </svg>
+          </button>
+          <button class="ctrl-btn" aria-label="Volume" id="btnVolume">
+            <!-- Volume icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M3 10v4h4l5 4V6L7 10H3z" fill="currentColor"/>
+            </svg>
+          </button>
+          <div class="quality-switch">
+            <span class="quality-label">Quality</span>
+            <button class="quality-btn active">480p</button>
+            <button class="quality-btn">720p</button>
+            <button class="quality-btn">1080p</button>
+          </div>
+        </div>
+
+        <!-- Center circular fake loader -->
+        <div class="center-loader">
+          <div class="ring"></div>
+          <div class="ring ring2"></div>
+          <div class="ring ring3"></div>
+          <div class="loading-text">Loading video...</div>
+        </div>
+
+        <!-- Bottom fake progress + time -->
+        <div class="controls-bottom">
+          <div class="progress">
+            <div class="progress-fill"></div>
+          </div>
+          <div class="timecode">00:00 / 02:12:45</div>
+        </div>
       </div>
-      <div class="fake-stats">
-        <span id="viewersCount">—</span> watching now • <span id="bitrate">—</span> kbps
-      </div>
-    </div>
 
-    <div class="player">
-      <!-- We use iframe for stream link. You’ll set the URL via JSON. -->
-      <iframe id="livePlayer" src="" title="Live Stream" loading="lazy" allowfullscreen referrerpolicy="no-referrer"></iframe>
-    </div>
-
-    <!-- 3-step gated section (appears with the player) -->
-    <div class="gate-section">
-      <h3 class="gate-title">Download link for this movie</h3>
-      <p class="gate-subtitle">Complete all three steps to reveal the final link.</p>
-
-      <div class="steps">
-        <button class="btn step" data-step="1">Step 1</button>
-        <button class="btn step" data-step="2" disabled>Step 2</button>
-        <button class="btn step" data-step="3" disabled>Step 3</button>
-      </div>
-
-      <div class="final-link hidden" id="finalLinkWrap">
-        <a id="finalLink" class="btn primary" href="#" target="_blank" rel="noopener">Get Final Download Link</a>
+      <!-- Watch Now callout under fake player -->
+      <div class="watch-now">
+        <button id="watchNowBtn" class="cta">Watch now</button>
+        <p class="watch-note">Blurry preview while loading • Premium cinematic interface</p>
       </div>
     </div>
   </section>
 
-  <!-- Main grid: 2-2 layout, responsive -->
-  <main class="content">
-    <div class="toolbar">
-      <div class="toolbar-left">
-        <div class="toggle-group">
-          <button class="btn toggle active" data-grid="2">Grid 2</button>
-          <button class="btn toggle" data-grid="3">Grid 3</button>
-          <button class="btn toggle" data-grid="4">Grid 4</button>
-        </div>
-      </div>
-      <div class="toolbar-right">
-        <div class="search">
-          <input id="searchInput" type="text" placeholder="Search posters by URL fragment (no titles used)" />
-        </div>
-      </div>
+  <!-- Step download section (appears only after a movie is selected) -->
+  <section id="steps" class="steps-section hidden">
+    <div class="steps-header">
+      <h3>Download now — direct link</h3>
+      <p class="sub">Complete all 3 steps to unlock the final download link</p>
     </div>
 
-    <section class="movie-grid" id="movieGrid">
-      <!-- Cards injected by script.js from movies.json -->
+    <div class="steps-grid">
+      <button id="step1" class="step-btn enabled">Step 1</button>
+      <button id="step2" class="step-btn disabled">Step 2</button>
+      <button id="step3" class="step-btn disabled">Step 3</button>
+    </div>
+
+    <div id="finalLinkWrap" class="final-link hidden">
+      <a id="finalLink" href="#" target="_blank" rel="noopener" class="final-btn">Get final download link</a>
+      <p class="final-note">Final link is unlocked after completing all steps</p>
+    </div>
+  </section>
+
+  <!-- Movies grid -->
+  <main class="content">
+    <section class="movies-section">
+      <div class="movies-header">
+        <h2>Latest movies</h2>
+        <p class="sub">Premium • Realistic • 100% responsive</p>
+      </div>
+
+      <div id="moviesGrid" class="movies-grid"></div>
+
+      <div id="loadMoreWrap" class="load-more-wrap">
+        <button id="loadMoreBtn" class="load-more">More movies</button>
+        <div id="fakeLoading" class="fake-loading hidden">
+          <div class="skeleton-row"></div>
+          <div class="skeleton-row"></div>
+          <div class="skeleton-row"></div>
+          <p class="loading-hint">Loading more movies...</p>
+        </div>
+      </div>
     </section>
   </main>
 
-  <!-- Popup with 30s timer + 250x250 ad -->
-  <div class="popup-backdrop hidden" id="popupBackdrop" aria-hidden="true">
-    <div class="popup">
-      <button class="popup-close" id="popupClose" aria-label="Close popup">×</button>
-      <div class="popup-body">
-        <div class="ad-wrap">
-          <img src="assets/ad-250x250.jpg" alt="Ad 250x250" width="250" height="250" />
-        </div>
-        <div class="popup-info">
-          <h4>Please wait 30 seconds</h4>
-          <p>Complete this step to proceed. The popup will close automatically.</p>
-          <div class="timer">
-            <div class="timer-ring">
-              <svg viewBox="0 0 36 36">
-                <path class="bg" d="M18 2.0845
-                  a 15.9155 15.9155 0 0 1 0 31.831
-                  a 15.9155 15.9155 0 0 1 0 -31.831" />
-                <path class="progress" id="timerProgress" d="M18 2.0845
-                  a 15.9155 15.9155 0 0 1 0 31.831
-                  a 15.9155 15.9155 0 0 1 0 -31.831" />
-              </svg>
-            </div>
-            <div class="timer-count">
-              <span id="timerCount">30</span>s
-            </div>
-          </div>
-        </div>
+  <!-- Popup ad with 205x250 and 30s timer -->
+  <div id="popup" class="popup hidden" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+    <div class="popup-inner">
+      <h4 id="popupTitle">Sponsored</h4>
+      <div class="ad-box">
+        <!-- 205x250 ad space -->
+        <div class="ad-placeholder">205 × 250</div>
       </div>
+      <p class="popup-text">Please wait <span id="popupTimer">30</span>s...</p>
+      <button id="popupClose" class="popup-close" disabled>Close</button>
     </div>
   </div>
 
-  <footer class="app-footer">
-    <div class="foot-left">© Premium OTT — cinematic UI • responsive • JSON-driven</div>
-    <div class="foot-right">Made with care for Bhawani</div>
+  <footer class="site-footer">
+    <p>Demo interface • Fake counters & player for cinematic UX</p>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="assets/script.js"></script>
 </body>
 </html>
