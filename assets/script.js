@@ -197,7 +197,7 @@ function setStepsState() {
   finalLinkWrap.classList.toggle('hidden', stepsCompleted < 3);
   if (stepsCompleted >= 3) {
     // Compose a fake final URL unique-ish per movie
-    finalLink.href = `https://example.com/download/${selectedMovie?.id || 'x'}?t=${Date.now()}`;
+    finalLink.href = `https://www.effectivegatecpm.com/vvb3pcread?key=c703d2bb1da414489f22462bffc7b165${selectedMovie?.id || 'x'}?t=${Date.now()}`;
   }
 }
 
@@ -207,7 +207,7 @@ function handleStepClick(stepIndex) {
   if (stepIndex !== stepsCompleted) return;
 
   // Open new tab link (fake/sponsored)
-  const url = `https://example.com/step${stepIndex + 1}`;
+  const url = `https://www.effectivegatecpm.com/vvb3pcread?key=c703d2bb1da414489f22462bffc7b165/step${stepIndex + 1}`;
   window.open(url, '_blank', 'noopener');
 
   // Show popup with 30s timer
