@@ -1,3 +1,199 @@
+<div class="movie-player" id="player">
+  <!--Top bar-->
+  <div class="player-header">
+    <span class="movie-title">Now Playing: Dummy Movie</span>
+    <span class="movie-quality" id="quality-label">HD 1080p</span>
+  </div>
+
+  <!--Poster background-->
+  <div class="poster"></div>
+
+  <!--Loading overlay-->
+  <div class="loading">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
+
+  <!--Controls-->
+  <div class="player-controls" id="controls">
+    <div class="left-controls">
+      <button class="btn" id="play-btn" title="Play/Pause">►</button>
+      <span class="time">00:00 / 02:15:00</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress" id="progress"></div>
+    </div>
+    <div class="right-controls">
+      <button class="btn" id="volume-btn" title="Mute/Unmute">🔊</button>
+      <div class="settings">
+        <button class="btn" id="settings-btn" title="Quality">⚙</button>
+        <div class="quality-menu" id="quality-menu">
+          <div data-quality="HD 1080p">1080p</div>
+          <div data-quality="HD 720p">720p</div>
+          <div data-quality="SD 480p">480p</div>
+        </div>
+      </div>
+      <button class="btn" id="fullscreen-btn" title="Fullscreen">⛶</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.movie-player {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  aspect-ratio: 16/9;
+  background: #000;
+  margin: 20px auto;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+  font-family: Arial, sans-serif;
+  color: #fff;
+}
+
+/* Poster background */
+.poster {
+  width: 100%; height: 100%;
+  background: url('https://picsum.photos/900/506?blur') center/cover no-repeat;
+  filter: brightness(0.6);
+}
+
+/* Top bar */
+.player-header {
+  position: absolute; top: 0; left: 0; right: 0;
+  padding: 6px 12px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+  display: flex; justify-content: space-between;
+  font-size: 14px; z-index: 2;
+}
+
+/* Loading overlay */
+.loading {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center; z-index: 3;
+}
+.spinner {
+  width: 70px; height: 70px;
+  border: 6px solid rgba(255,255,255,0.2);
+  border-top: 6px solid #e50914;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: auto;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+.loading p { margin-top: 10px; font-size: 14px; opacity: 0.8; }
+
+/* Controls */
+.player-controls {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 8px 12px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 13px; z-index: 2;
+  opacity: 1; transition: opacity 0.5s;
+}
+.left-controls, .right-controls { display: flex; align-items: center; gap: 8px; }
+.btn { background: none; border: none; color: #fff; font-size: 16px; cursor: pointer; opacity: 0.8; }
+.btn:hover { opacity: 1; }
+
+/* Progress bar */
+.progress-bar { flex: 1; height: 4px; background: rgba(255,255,255,0.2); margin: 0 12px; border-radius: 2px; overflow: hidden; }
+.progress { width: 0%; height: 100%; background: #e50914; animation: load 6s infinite; }
+
+@keyframes load {
+  0% { width: 0%; }
+  40% { width: 60%; }
+  70% { width: 80%; }
+  100% { width: 0%; }
+}
+
+/* Quality menu */
+.settings { position: relative; }
+.quality-menu {
+  display: none; position: absolute; bottom: 30px; right: 0;
+  background: rgba(0,0,0,0.9); padding: 6px; border-radius: 4px;
+}
+.quality-menu div { padding: 4px 8px; cursor: pointer; }
+.quality-menu div:hover { background: rgba(255,255,255,0.1); }
+</style>
+
+<script>
+const playBtn = document.getElementById('play-btn');
+const volumeBtn = document.getElementById('volume-btn');
+const settingsBtn = document.getElementById('settings-btn');
+const qualityMenu = document.getElementById('quality-menu');
+const qualityLabel = document.getElementById('quality-label');
+const fullscreenBtn = document.getElementById('fullscreen-btn');
+const controls = document.getElementById('controls');
+const player = document.getElementById('player');
+
+// Play/Pause toggle (only icon change, time frozen)
+let playing = false;
+playBtn.addEventListener('click', () => {
+  if (!playing) {
+    playBtn.innerHTML = '&#10074;&#10074;'; // pause icon
+    playing = true;
+  } else {
+    playBtn.innerHTML = '&#9658;'; // play icon
+    playing = false;
+  }
+});
+
+// Volume toggle
+volumeBtn.addEventListener('click', () => {
+  volumeBtn.textContent = volumeBtn.textContent === '🔊' ? '🔇' : '🔊';
+});
+
+// Settings menu toggle
+settingsBtn.addEventListener('click', () => {
+  qualityMenu.style.display = qualityMenu.style.display === 'block' ? 'none' : 'block';
+});
+qualityMenu.querySelectorAll('div').forEach(item => {
+  item.addEventListener('click', () => {
+    qualityLabel.textContent = item.dataset.quality;
+    qualityMenu.style.display = 'none';
+  });
+});
+
+// Fullscreen toggle
+fullscreenBtn.addEventListener('click', () => {
+  if (!document.fullscreenElement) {
+    player.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+});
+
+// Auto-hide controls after inactivity
+let hideTimeout;
+function showControls() {
+  controls.style.opacity = 1;
+  clearTimeout(hideTimeout);
+  hideTimeout = setTimeout(() => { controls.style.opacity = 0; }, 4000);
+}
+player.addEventListener('mousemove', showControls);
+player.addEventListener('click', showControls);
+showControls();
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') playBtn.click();
+  if (e.key.toLowerCase() === 'f') fullscreenBtn.click();
+  if (e.key.toLowerCase() === 'm') volumeBtn.click();
+});
+</script>
+
+
+
+
+
+
+
+
+
 
 <html lang="en">
 <head>
@@ -78,7 +274,7 @@ body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,
 .mini-fill{height:100%;width:0%;background:#fff;border-radius:999px;transition:width .5s ease}
 
 .ad-slot{width:250px;height:250px;margin:12px auto;background:#f1f3f5;border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#374151;font-weight:900}
-	
+
 /* Slideshow */
 .slideshow{max-width:980px;margin:16px auto;border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow)}
 .slide{display:none}
@@ -150,13 +346,18 @@ body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,
 <!-- Bottom slideshow -->
 <div class="slideshow">
   <a class="slide fade" href="https://www.effectivegatecpm.com/j9h3frm9qn?key=33b481c9f6d9d7bfaac53f0f3729c7cd" rel="noopener" target="_blank">
-    <img alt="Sponsored Ad 1" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhlRgrIox0m6wQ-fzUxBv7tT5EdrzwtJAng5LAcNqVjpmN3ozNKAiUNWKO539MdXnSHFbSAB_Urnj3dnPWmbRRY6ZS2Q_EojUEO3oCX9rECAhIYz64fdr53hyphenhyphenGVGNmlfAnaMgC3j_3HXVj5mbeYXXTkL3H4WKaejp4E_zYJfA4aPrXMnRhjjRTxG31sgnOo/s1024/Gemini_Generated_Image_tesch5tesch5tesc.png" />
+    <img alt="Sponsored Ad 1" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgJsZ_PSnnolvcXh4nyukISmh97TTqNArZpARjiFpNEiGPcVhp5XZFTJV3WKv_ltj4Srwmvj7QNqbGmxzFE-P6uJcoQUO1nSAsvLqGrjon5ANRUZXyG_kLxiecF0xELhlO44BPJzvBA1D1fUEuxKivS5MmV-BIWFiIah4KNGkq5PHPs7-x7mDXoZHHyNRTr/s1536/copilot_image_1762490596754.jpeg" />
   </a>
   <a class="slide fade" href="#" rel="noopener" target="_blank">
-    <img alt="Sponsored Ad 2" src="https://via.placeholder.com/1000x320/34c759/ffffff?text=Sponsored+Ad+2" />
+    <img alt="Sponsored Ad 2" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiMQFWnwST0q98XAUBvqQaGCj6nOmwd8ZFpCEOaPvETnJdW4NhTcWwIBKO71te9Bq3FJoltoo6q3MNxKLsR25lkZjMswzKxWY3Y8tBmsB-4JmGqysyI8JX3MF3QQIiLyQ5j90cNzpfZz5vIRi91TjWhyphenhyphenfAyNDo2dQWOLsZRzsXXJY789iE4tJDwzmxwjvzq/s1536/copilot_image_1762490192388.jpeg" />
   </a>
+  
+    <a class="slide fade" href="#" rel="noopener" target="_blank">
+    <img alt="Sponsored Ad 2" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgFjqVQp3b19ygyh6gp2k50MMmcF4NCfSuonUnQs8NAX0A2PNxSvjsKMfq96gsPeD2AWZxh3gtk1duAwD0YKGOutT4hJZmv3ixC-x2trWcJARbrphxCAQJvDfgLIecolfXlpR5b-em6bQKLOmUrFoYLtIQ9qrAmAY2UX_mjLoE3iqV3pjJGx8cKqa8odm9r/s1536/copilot_image_1762489936212.jpeg" />
+  </a>
+  
   <a class="slide fade" href="#" rel="noopener" target="_blank">
-    <img alt="Sponsored Ad 3" src="https://via.placeholder.com/1000x320/f59e0b/ffffff?text=Sponsored+Ad+3" />
+    <img alt="Sponsored Ad 3" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEidiNEfnS1odnux1Ze7AXMlXXdWyciPAFFoHvkIVwmEONBx1oI6i0pbA97mc4Tz2rs7Zm_IcZ03pzyIh0u_hUM27kWaxIgp-P_DY2yi0hyPlIodDcwvlNUlKhNSPjQhw2SvtTHzRK7hSYmJt8ZtHISjOQxk6pNK9num39MMnD2FT9QhbrD_wT6OlJ4BzzE7/s1536/Telegram%20promo%20image%20bs.png" />
   </a>
   <div class="dots" id="dots"></div>
 </div>
