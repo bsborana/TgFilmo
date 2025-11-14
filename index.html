@@ -1,146 +1,198 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cinematic Movies — Premium</title>
-  <link rel="preconnect" href="https://images.unsplash.com" />
-  <link rel="stylesheet" href="assets/styles.css" />
+<meta charset="UTF-8"></meta>
+<meta content="width=device-width,initial-scale=1" name="viewport"></meta>
+<title>SmartLink Pro Unlocker</title>
+
+<style>
+:root{
+  --bg:#f7f8fa; --card:#ffffff; --text:#1b1f23; --muted:#6b7280;
+  --accent:#0a84ff; --accent-2:#34c759; --warning:#ff9f0a;
+  --border:#e5e7eb; --overlay:rgba(0,0,0,.72);
+  --shadow:0 12px 28px rgba(0,0,0,.08);
+}
+.dark{
+  --bg:#0b0f14; --card:#101620; --text:#e6edf3; --muted:#9aa4af;
+  --accent:#3b82f6; --accent-2:#22c55e; --warning:#f59e0b;
+  --border:#1f2937; --overlay:rgba(0,0,0,.78);
+  --shadow:0 18px 40px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;line-height:1.5}
+
+.container{max-width:980px;margin:auto;padding:16px}
+.notice{background:#fff3cd;border:1px solid #ffeeba;border-radius:12px;padding:12px;margin:14px 0;box-shadow:var(--shadow);color:#856404;font-weight:700}
+.header{display:flex;justify-content:space-between;align-items:center;margin:10px 0}
+.logo{display:inline-flex;align-items:center;gap:10px;font-weight:900}
+.logo-badge{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--accent),#6ea8ff);box-shadow:0 8px 20px rgba(10,132,255,.35)}
+.brand-title{font-weight:900}
+.brand-sub{color:var(--muted);font-size:13px}
+.theme-toggle{border:1px solid var(--border);background:var(--card);color:var(--text);padding:8px 12px;border-radius:8px;cursor:pointer;transition:transform .2s ease}
+.theme-toggle:hover{transform:translateY(-1px)}
+.user-counter{text-align:center;font-weight:800;color:var(--accent);margin:8px 0}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:16px}
+
+.stepper{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.step{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:10px}
+.dot{width:16px;height:16px;border-radius:50%;background:#cbd5e1;box-shadow:inset 0 0 0 2px #94a3b8}
+.step.active .dot{background:var(--accent)}
+.step.done .dot{background:var(--accent-2)}
+.label{font-weight:800}
+.status{color:var(--muted);font-size:12px}
+.line{flex:1;min-width:40px;height:2px;background:var(--border)}
+
+.message{background:rgba(10,132,255,.08);border:1px dashed rgba(10,132,255,.35);color:var(--accent);padding:10px;border-radius:12px;margin:10px 0;font-weight:700}
+
+.buttons{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.step-btn{background:linear-gradient(45deg,var(--accent),#6ea8ff);border:none;color:#fff;padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(10,132,255,.35);transition:transform .2s ease}
+.step-btn:hover:enabled{transform:translateY(-1px)}
+.step-btn:disabled{background:#9aa4af;cursor:not-allowed;box-shadow:none;filter:saturate(.8)}
+.timer{display:block;text-align:center;color:var(--warning);font-weight:800}
+
+.final-wrap{display:grid;place-items:center;margin-top:14px}
+.final-btn{display:none;background:linear-gradient(45deg,var(--accent-2),#7dd87a);color:#fff;text-decoration:none;padding:14px 24px;border-radius:14px;font-size:18px;font-weight:900;box-shadow:0 6px 16px rgba(34,197,94,.35);transform:scale(.98)}
+.final-btn.reveal{display:inline-block;animation:reveal .4s ease forwards}
+@keyframes reveal{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+
+/* Sticky popup */
+.sticky-box{position:fixed;inset:0;background:var(--overlay);display:none;align-items:center;justify-content:center;z-index:9999}
+.sticky-content{width:92%;max-width:420px;background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+.sticky-header{display:flex;align-items:center;justify-content:space-between;background:var(--accent);color:#fff;padding:10px 14px}
+.sticky-left{display:flex;flex-direction:column;gap:2px}
+#stickyMsg{font-weight:900}
+.sticky-sub{opacity:.95;font-size:12px;transition:opacity .3s ease}
+.sticky-users{font-size:12px;opacity:.95}
+.ad-label{font-size:11px;opacity:.9;margin-left:6px}
+.close-btn{position:absolute;right:16px;top:10px;border:none;background:transparent;color:#fff;font-size:22px;font-weight:900;cursor:pointer}
+
+.circle-wrap{position:relative;width:56px;height:56px}
+.circle{transform:rotate(-90deg)}
+.circle .bg{fill:none;stroke:rgba(255,255,255,.35);stroke-width:6}
+.circle .prog{fill:none;stroke:#fff;stroke-width:6;stroke-linecap:round;stroke-dasharray:0 100}
+.circle-text{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-weight:900}
+
+.mini-progress{height:4px;background:rgba(255,255,255,.3);border-radius:999px;overflow:hidden;margin-top:6px}
+.mini-fill{height:100%;width:0%;background:#fff;border-radius:999px;transition:width .5s ease}
+
+.ad-slot{width:250px;height:250px;margin:12px auto;background:#f1f3f5;border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#374151;font-weight:900}
+
+/* Slideshow */
+.slideshow{max-width:980px;margin:16px auto;border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow)}
+.slide{display:none}
+.slide img{width:100%;display:block}
+.fade{animation:fadeEffect 1s}
+@keyframes fadeEffect{from{opacity:.4}to{opacity:1}}
+.dots{display:flex;gap:6px;justify-content:center;padding:10px;border-top:1px solid var(--border)}
+.dot-ind{width:8px;height:8px;border-radius:50%;background:#cbd5e1;cursor:pointer}
+.dot-ind.active{background:var(--accent)}
+
+.footer{max-width:980px;margin:0 auto 24px;text-align:center;color:var(--muted);font-size:13px}
+.trust{display:flex;gap:8px;justify-content:center;margin-top:6px}
+.badge{padding:4px 8px;border:1px solid var(--border);border-radius:999px;font-size:11px;color:var(--muted);background:var(--card)}
+
+/* Responsive tweaks */
+@media (max-width:640px){
+  .brand-sub{display:none}
+  .sticky-content{max-height:90vh}
+}
+</style>
 </head>
 <body>
 
-  <!-- Top counters: realistic & fluctuating -->
-  <header id="top" class="site-header">
-    <div class="brand">
-      <div class="logo-mark">🎬</div>
-      <div class="brand-text">
-        <h1>Cinematic Movies</h1>
-        <p class="tagline">Premium • 100% • Smart</p>
+<div class="container">
+  <div class="notice">
+    Complete all 3 steps one by one. Only after finishing them, the final Download link will be available.
+  </div>
+
+  <div class="header">
+    <div class="logo">
+      <div class="logo-badge">SL</div>
+      <div>
+        <div class="brand-title">SmartLink Pro</div>
+        <div class="brand-sub">Unlock your destination</div>
       </div>
     </div>
+    <button class="theme-toggle" id="themeToggle" type="button">Dark mode</button>
+  </div>
 
-    <div class="hero-counters">
-      <div class="counter-card">
-        <span class="label">Last year downloads</span>
-        <div class="value" id="lastYearDownloads">100,000</div>
-      </div>
-      <div class="counter-card">
-        <span class="label">Live users</span>
-        <div class="value" id="liveUsers">312</div>
-      </div>
-      <div class="counter-card">
-        <span class="label">Today downloads</span>
-        <div class="value" id="todayDownloads">1,420</div>
-      </div>
-      <div class="counter-card">
-        <span class="label">Total downloads</span>
-        <div class="value" id="totalDownloads">2,514,320</div>
-      </div>
+  <div class="user-counter">
+    Active users unlocking links: <span id="userCount">325</span>
+  </div>
+
+  <div class="card">
+    <div aria-label="Progress" class="stepper">
+      <div class="step" id="s1"><div class="dot"></div><div class="label">Step 1</div><div class="status" id="s1Status">Pending</div></div>
+      <div class="line"></div>
+      <div class="step" id="s2"><div class="dot"></div><div class="label">Step 2</div><div class="status" id="s2Status">Locked</div></div>
+      <div class="line"></div>
+      <div class="step" id="s3"><div class="dot"></div><div class="label">Step 3</div><div class="status" id="s3Status">Locked</div></div>
+      <div class="line"></div>
+      <div class="step" id="sFinal"><div class="dot"></div><div class="label">Final Link</div><div class="status" id="sFinalStatus">Locked</div></div>
     </div>
-  </header>
 
-  <!-- Fake player zone (filled when user clicks a movie) -->
-  <section id="player" class="player-section hidden">
-    <div class="player-bg" id="playerBg"></div>
-    <div class="player-content">
-      <h2 id="playerTitle">Selected Movie Title</h2>
+    <div class="message" id="engageMsg">Start with Step 1 to unlock the next step.</div>
 
-      <div class="video-fake">
-        <!-- Fake controls -->
-        <div class="controls-top">
-          <button class="ctrl-btn" aria-label="Play/Pause" id="btnPlay">
-            <!-- Play icon -->
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M8 5v14l11-7-11-7z" fill="currentColor"/>
-            </svg>
-          </button>
-          <button class="ctrl-btn" aria-label="Volume" id="btnVolume">
-            <!-- Volume icon -->
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M3 10v4h4l5 4V6L7 10H3z" fill="currentColor"/>
-            </svg>
-          </button>
-          <div class="quality-switch">
-            <span class="quality-label">Quality</span>
-            <button class="quality-btn active">480p</button>
-            <button class="quality-btn">720p</button>
-            <button class="quality-btn">1080p</button>
-          </div>
+    <div class="buttons">
+      <button class="step-btn" id="btn1">Step 1</button>
+      <button class="step-btn" disabled="" id="btn2">Step 2</button>
+      <button class="step-btn" disabled="" id="btn3">Step 3</button>
+    </div>
+
+    <div class="final-wrap">
+      <a class="final-btn" href="#" id="finalLink" target="_blank">Final Link</a>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom slideshow -->
+<div class="slideshow">
+  <a class="slide fade" href="https://www.effectivegatecpm.com/j9h3frm9qn?key=33b481c9f6d9d7bfaac53f0f3729c7cd" rel="noopener" target="_blank">
+    <img alt="Sponsored Ad 1" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhlRgrIox0m6wQ-fzUxBv7tT5EdrzwtJAng5LAcNqVjpmN3ozNKAiUNWKO539MdXnSHFbSAB_Urnj3dnPWmbRRY6ZS2Q_EojUEO3oCX9rECAhIYz64fdr53hyphenhyphenGVGNmlfAnaMgC3j_3HXVj5mbeYXXTkL3H4WKaejp4E_zYJfA4aPrXMnRhjjRTxG31sgnOo/s1024/Gemini_Generated_Image_tesch5tesch5tesc.png" />
+  </a>
+  <a class="slide fade" href="#" rel="noopener" target="_blank">
+    <img alt="Sponsored Ad 2" src="https://via.placeholder.com/1000x320/34c759/ffffff?text=Sponsored+Ad+2" />
+  </a>
+  <a class="slide fade" href="#" rel="noopener" target="_blank">
+    <img alt="Sponsored Ad 3" src="https://via.placeholder.com/1000x320/f59e0b/ffffff?text=Sponsored+Ad+3" />
+  </a>
+  <div class="dots" id="dots"></div>
+</div>
+
+<!-- Footer / trust signals -->
+<div class="footer">
+  Powered by SmartLink Pro • Step‑based unlock interface
+  <div class="trust">
+    <div class="badge">Secure session</div>
+    <div class="badge">Anti‑bot checks</div>
+    <div class="badge">Encrypted redirect</div>
+  </div>
+</div>
+
+<!-- Sticky popup -->
+<div aria-hidden="true" class="sticky-box" id="stickyBox">
+  <div class="sticky-content">
+    <button aria-label="Close" class="close-btn" id="closeBox">×</button>
+    <div class="sticky-header">
+      <div class="sticky-left">
+        <div id="stickyMsg">Preparing your link…</div>
+        <div class="sticky-sub" id="stickySub">
+          Checking browser compatibility… <span class="ad-label">Sponsored</span>
         </div>
-
-        <!-- Center circular fake loader -->
-        <div class="center-loader">
-          <div class="ring"></div>
-          <div class="ring ring2"></div>
-          <div class="ring ring3"></div>
-          <div class="loading-text">Loading video...</div>
-        </div>
-
-        <!-- Bottom fake progress + time -->
-        <div class="controls-bottom">
-          <div class="progress">
-            <div class="progress-fill"></div>
-          </div>
-          <div class="timecode">00:00 / 02:12:45</div>
-        </div>
+        <div class="sticky-users">You + <span id="stickyUserCount">324</span> others are unlocking this link</div>
+        <div class="mini-progress"><div class="mini-fill" id="miniFill"></div></div>
       </div>
-
-      <!-- Watch Now callout under fake player -->
-      <div class="watch-now">
-        <button id="watchNowBtn" class="cta">Watch now</button>
-        <p class="watch-note">Blurry preview while loading • Premium cinematic interface</p>
+      <div class="circle-wrap">
+        <svg class="circle" height="56" width="56">
+          <circle class="bg" cx="28" cy="28" r="24"></circle>
+          <circle class="prog" cx="28" cy="28" r="24"></circle>
+        </svg>
+        <div class="circle-text" id="circleText">30</div>
       </div>
     </div>
-  </section>
-
-  <!-- Step download section (appears only after a movie is selected) -->
-  <section id="steps" class="steps-section hidden">
-    <div class="steps-header">
-      <h3>Download now — direct link</h3>
-      <p class="sub">Complete all 3 steps to unlock the final download link</p>
-    </div>
-
-    <div class="steps-grid">
-      <button id="step1" class="step-btn enabled">Step 1</button>
-      <button id="step2" class="step-btn disabled">Step 2</button>
-      <button id="step3" class="step-btn disabled">Step 3</button>
-    </div>
-
-    <div id="finalLinkWrap" class="final-link hidden">
-      <a id="finalLink" href="#" target="_blank" rel="noopener" class="final-btn">Get final download link</a>
-      <p class="final-note">Final link is unlocked after completing all steps</p>
-    </div>
-  </section>
-
-  <!-- Movies grid -->
-  <main class="content">
-    <section class="movies-section">
-      <div class="movies-header">
-        <h2>Latest movies</h2>
-        <p class="sub">Premium • Cinematic • 100% responsive</p>
-      </div>
-
-      <div id="moviesGrid" class="movies-grid"></div>
-
-      <div id="loadMoreWrap" class="load-more-wrap">
-        <button id="loadMoreBtn" class="load-more">More movies</button>
-        <div id="fakeLoading" class="fake-loading hidden">
-          <div class="skeleton-row"></div>
-          <div class="skeleton-row"></div>
-          <div class="skeleton-row"></div>
-          <p class="loading-hint">Loading more movies...</p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Popup ad with 205x250 and 30s timer -->
-  <div id="popup" class="popup hidden" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
-    <div class="popup-inner">
-      <h4 id="popupTitle">Sponsored</h4>
-      <div class="ad-box">
-        <!-- 205x250 ad space -->
-        <div class="ad-placeholder"><script type="text/javascript">
+    <div class="ad-slot"><script type="text/javascript">
 	atOptions = {
 		'key' : '9e179085d320f39d597244562bf72dae',
 		'format' : 'iframe',
@@ -149,17 +201,208 @@
 		'params' : {}
 	};
 </script>
-<script type="text/javascript" src="//www.highperformanceformat.com/9e179085d320f39d597244562bf72dae/invoke.js"></script></div>
-      </div>
-      <p class="popup-text">Please wait <span id="popupTimer">30</span>s...</p>
-      <button id="popupClose" class="popup-close" disabled>Close</button>
-    </div>
+<script src="//www.highperformanceformat.com/9e179085d320f39d597244562bf72dae/invoke.js" type="text/javascript"></script></div>
   </div>
+</div>
 
-  <footer class="site-footer">
-    <p>@2022 • Movie Stream Site 2025</p>
-  </footer>
+<script>
+// ===== Config: replace these with your real links =====
+const link1 = "https://www.effectivegatecpm.com/j9h3frm9qn?key=33b481c9f6d9d7bfaac53f0f3729c7cd";
+const link2 = "https://www.effectivegatecpm.com/afzg9a9nkv?key=5dcefc80a0b0e89fcfdb3d77f9660bbe";
+const link3 = "https://www.effectivegatecpm.com/mswpne8xsb?key=6a9cf1265ff02dc0188923179c17c4a7";
+const finalLinkHref = "https://www.effectivegatecpm.com/vvb3pcread?key=c703d2bb1da414489f22462bffc7b165";
 
-  <script src="assets/script.js"></script>
+// Elements
+const btn1 = document.getElementById("btn1");
+const btn2 = document.getElementById("btn2");
+const btn3 = document.getElementById("btn3");
+const finalLink = document.getElementById("finalLink");
+const engageMsg = document.getElementById("engageMsg");
+
+const s1 = document.getElementById("s1");
+const s2 = document.getElementById("s2");
+const s3 = document.getElementById("s3");
+const sFinal = document.getElementById("sFinal");
+const s1Status = document.getElementById("s1Status");
+const s2Status = document.getElementById("s2Status");
+const s3Status = document.getElementById("s3Status");
+const sFinalStatus = document.getElementById("sFinalStatus");
+
+// Sticky modal elements
+const box = document.getElementById("stickyBox");
+const closeBtn = document.getElementById("closeBox");
+const stickyMsg = document.getElementById("stickyMsg");
+const stickySub = document.getElementById("stickySub");
+const circleText = document.getElementById("circleText");
+const progCircle = document.querySelector(".circle .prog");
+const stickyUserCount = document.getElementById("stickyUserCount");
+const miniFill = document.getElementById("miniFill");
+
+// Theme toggle
+document.getElementById("themeToggle").addEventListener("click", ()=>{
+  document.body.classList.toggle("dark");
+  document.getElementById("themeToggle").textContent = document.body.classList.contains("dark") ? "Light mode" : "Dark mode";
+});
+
+// Global user counter
+const userCountEl = document.getElementById("userCount");
+let globalUserCount = 320 + Math.floor(Math.random()*50); // 320–369 start
+function updateGlobalUserCount(){
+  const change = Math.random() > 0.5 ? 1 : -1;
+  globalUserCount += change;
+  if(globalUserCount < 300) globalUserCount = 300;
+  if(globalUserCount > 410) globalUserCount = 410;
+  userCountEl.textContent = globalUserCount;
+}
+setInterval(updateGlobalUserCount, 2000 + Math.random()*2000);
+userCountEl.textContent = globalUserCount;
+
+// Local sticky counter mirrors global with offset
+function updateStickyUserCount(){
+  const offset = Math.floor(Math.random()*6) - 3; // -3..+2
+  const localCount = Math.max(250, Math.min(500, globalUserCount + 20 + offset));
+  stickyUserCount.textContent = localCount;
+}
+
+// Countdown ring setup
+const R = 24; const C = 2 * Math.PI * R;
+progCircle.setAttribute("stroke-dasharray", C + " " + C);
+
+// Rotating messages
+const messages = [
+  "Unlocking your next step…",
+  "Optimizing link preview…",
+  "Almost there…",
+  "Verifying session…",
+  "Preparing secure redirect…",
+  "Checking browser compatibility…"
+];
+
+// Open popup (redirect-based, no iframe) and countdown
+function openStickyRedirect(link, onDone){
+  let time = 30, msgIndex = 0;
+  circleText.textContent = time;
+  stickyMsg.textContent = "Preparing your link…";
+  stickySub.textContent = messages[msgIndex % messages.length];
+  updateStickyUserCount();
+  miniFill.style.width = "0%";
+  box.style.display = "flex";
+
+  // Try opening link in new tab on user gesture (best chance to bypass blockers)
+  const newTab = window.open(link, "_blank");
+  if(!newTab){
+    // If blocked, retry shortly; still user-initiated in many browsers
+    setTimeout(()=>window.open(link,"_blank"),50);
+  }
+
+  const start = Date.now();
+  const tick = setInterval(()=>{
+    time--;
+    circleText.textContent = time;
+
+    const elapsed = (Date.now() - start)/1000;
+    const proportion = Math.min(elapsed/30, 1);
+    const dashOffset = C * (1 - proportion);
+    progCircle.setAttribute("stroke-dasharray", C + " " + C);
+    progCircle.setAttribute("stroke-dashoffset", dashOffset);
+    miniFill.style.width = (proportion*100).toFixed(1) + "%";
+
+    if (time % 3 === 0) updateStickyUserCount();
+    if (time % 6 === 0){ msgIndex++; stickySub.textContent = messages[msgIndex % messages.length]; }
+
+    if (time <= 0){
+      clearInterval(tick);
+      closeSticky();
+      if(onDone) onDone();
+    }
+  }, 1000);
+
+  function closeSticky(){
+    box.style.display = "none";
+    progCircle.removeAttribute("stroke-dashoffset");
+    miniFill.style.width = "0%";
+  }
+  closeBtn.onclick = closeSticky;
+}
+
+// Helper to mark steps done
+function markDone(timerTextEl, currentStepEl, nextStepEl, currentStatusEl, nextStatusEl){
+  if(timerTextEl){ timerTextEl.textContent = " ✔ Done"; }
+  if(currentStepEl){ currentStepEl.classList.add("done"); if(currentStatusEl) currentStatusEl.textContent = "Completed"; }
+  if(nextStepEl){ nextStepEl.classList.add("active"); if(nextStatusEl) nextStatusEl.textContent = "Ready"; }
+  engageMsg.textContent = "Next step is ready. Continue to unlock.";
+}
+
+// Button flows
+btn1.addEventListener("click", ()=>{
+  btn1.disabled = true;
+  s1.classList.add("active");
+  s1Status.textContent = "In progress";
+  s2.classList.add("active");
+  engageMsg.textContent = "Please wait, unlocking next step…";
+
+  openStickyRedirect(link1, ()=>{
+    markDone(null, s1, s2, s1Status, s2Status);
+    btn2.disabled = false;
+  });
+});
+
+btn2.addEventListener("click", ()=>{
+  btn2.disabled = true;
+  s2Status.textContent = "In progress";
+  s3.classList.add("active");
+  engageMsg.textContent = "Please wait, unlocking next step…";
+
+  openStickyRedirect(link2, ()=>{
+    markDone(null, s2, s3, s2Status, s3Status);
+    btn3.disabled = false;
+  });
+});
+
+btn3.addEventListener("click", ()=>{
+  btn3.disabled = true;
+  s3Status.textContent = "In progress";
+  engageMsg.textContent = "Preparing final link…";
+
+  openStickyRedirect(link3, ()=>{
+    markDone(null, s3, sFinal, s3Status, sFinalStatus);
+    sFinalStatus.textContent = "Available";
+    finalLink.href = finalLinkHref;
+    finalLink.classList.add("reveal");
+    engageMsg.textContent = "Congratulations! Final link unlocked.";
+  });
+});
+
+// Slideshow (optional ads)
+const slides = document.getElementsByClassName("slide");
+const dotsWrap = document.getElementById("dots");
+let slideIndex = 0;
+function buildDots(){
+  dotsWrap.innerHTML = "";
+  for(let i=0;i<slides.length;i++){
+    const d = document.createElement("div");
+    d.className = "dot-ind" + (i===0?" active":"");
+    d.dataset.index = i;
+    d.addEventListener("click", ()=> showSlide(i));
+    dotsWrap.appendChild(d);
+  }
+}
+function showSlide(i){
+  for(let j=0;j<slides.length;j++){
+    slides[j].style.display = "none";
+    dotsWrap.children[j].classList.remove("active");
+  }
+  slides[i].style.display = "block";
+  dotsWrap.children[i].classList.add("active");
+  slideIndex = i;
+}
+function autoSlide(){
+  slideIndex = (slideIndex + 1) % slides.length;
+  showSlide(slideIndex);
+}
+buildDots();
+showSlide(0);
+setInterval(autoSlide, 3000);
+</script>
 </body>
 </html>
